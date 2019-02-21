@@ -34,3 +34,10 @@ class Ship():
             self.centery -= self.settings.ship_speed_factor
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
+
+    def center_ship(self):
+        """Center the ship on the screen."""
+        self.rect.centerx = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom
+        self.centerx = self.rect.centerx
+        self.centery = self.rect.centery

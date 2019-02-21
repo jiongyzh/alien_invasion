@@ -7,6 +7,7 @@ class Settings():
         self.bg_color = (230, 230, 230)
         # Ship settings
         self.ship_speed_factor = 2.8
+        self.ship_limit = 3
 
         # Bullet settings
         self.bullet_speed_factor = 2.5
@@ -18,3 +19,4 @@ class Settings():
         # Alien settings
         self.alien_speed_factor_x = 2.5
         self.alien_speed_factor_y = 1
+        self.alien_create_rate = 0.98

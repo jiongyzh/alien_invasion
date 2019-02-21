@@ -29,10 +29,10 @@ class Alien(Sprite):
 
     def update(self):
         """Move the alien."""
-        if self.x >= self.settings.screen_width - self.rect.width:
+        if self.rect.right >= self.screen.get_rect().right:
             self.x -= self.settings.alien_speed_factor_x
             self.direction_flag = False
-        elif self.x <= 0:
+        elif self.rect.left <= 0:
             self.x += self.settings.alien_speed_factor_x
             self.direction_flag = True
         elif self.change_direction_flag:

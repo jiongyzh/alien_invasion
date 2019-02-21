@@ -2,6 +2,7 @@ import sys
 import pygame
 from random import random
 from random import randint
+from time import sleep
 
 from bullet import Bullet
 from alien import Alien
@@ -51,7 +52,7 @@ def check_events(settings, screen, ship, bullets):
             check_keyup_event(event, settings, screen, ship, bullets)
 
 
-def update_bullets(bullets):
+def update_bullets(bullets, aliens):
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom < 12:
@@ -59,14 +60,14 @@ def update_bullets(bullets):
     for bullet in bullets.sprites():
         bullet.draw_bullet()
 
+    # Check for any bullets that have hit aliens.
+    # If so, get rid of the bullet and the alien.
+    pygame.sprite.groupcollide(bullets, aliens, True, True)
 
-def update_screen(settings, screen, alien, aliens, ship, bullets):
+
+def update_screen(screen, alien, aliens, ship):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
-    screen.fill(settings.bg_color)
-    ship.update()
-    update_bullets(bullets)
-    update_aliens(aliens)
     alien.blit_me()
     ship.blit_me()
     aliens.draw(screen)
@@ -80,7 +81,7 @@ def create_fleet(settings, screen, aliens):
     alien = Alien(settings, screen)
     alien_width = alien.rect.width
     alien_height = alien.rect.height
-    if random() > 0.98:
+    if random() > settings.alien_create_rate:
         slot_number_x = settings.screen_width // alien_width
         slot_number_y = settings.screen_height / 2 // alien_height
         alien.x = alien_width * randint(0, slot_number_x)
@@ -89,8 +90,29 @@ def create_fleet(settings, screen, aliens):
         alien.rect.y = alien.y
         aliens.add(alien)
 
-def update_aliens(aliens):
+
+def update_aliens(aliens, ship, bullets, stats):
     """Update the postions of all aliens in the fleet."""
     aliens.update()
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(ship, bullets, stats)
 
+    check_aliens_bottom(aliens, ship, bullets, stats)
+
+
+def ship_hit(ship, bullets, stats):
+    """Respond to ship being hit by alien."""
+    if stats.ships_left > 1:
+        stats.ships_left -= 1
+        bullets.empty()
+        ship.center_ship()
+    else:
+        stats.game_active = False
+
+
+def check_aliens_bottom(aliens, ship, bullets, stats):
+    for alien in aliens.sprites():
+        if alien.rect.bottom > alien.screen.get_rect().bottom:
+            ship_hit(ship, bullets, stats)
+            aliens.remove(alien)
 
