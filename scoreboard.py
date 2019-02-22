@@ -16,7 +16,7 @@ class Scoreboard():
         self.pre_shoot_alient_number = 0
 
         self.text_color = (30, 30, 30)
-        self.font = font.SysFont(None, 48)
+        self.font = font.SysFont(None, 32)
 
         self.prep_score()
         self.prep_high_score()
