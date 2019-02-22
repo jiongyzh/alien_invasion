@@ -77,7 +77,6 @@ def update_bullets(bullets, aliens, stats, settings, scoreboard):
         scoreboard.prep_high_score()
 
 
-
 def update_screen(screen, alien, aliens, ship, scoreboard, settings):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
