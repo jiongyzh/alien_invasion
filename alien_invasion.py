@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Group
+from pygame.mixer import music
 
 from settings import Settings
 from alien import Alien
@@ -13,6 +14,8 @@ import game_functions as gf
 def run_game():
     # Initialize game and create a screen object.
     pygame.init()
+    music.load('sounds/BG1.mp3')
+    music.play(-1)
     ai_settings = Settings()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
     stats = GameStats(ai_settings)

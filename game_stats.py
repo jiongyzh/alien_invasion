@@ -20,7 +20,7 @@ class GameStats():
         try:
             with open('record.txt', 'r') as record_file:
                 try:
-                    self.high_score = int(record_file.read().strip())
+                    self.high_score = int(float(record_file.read().strip()))
                 except ValueError:
                     self.high_score = 0
         except FileNotFoundError:
