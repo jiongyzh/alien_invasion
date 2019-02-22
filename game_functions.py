@@ -11,7 +11,7 @@ from alien import Alien
 def fire_bullet(settings, screen, ship, bullets):
     """Fire a bullet if limit not reached yet."""
     if len(bullets) < settings.bullets_allowed:
-        Sound('Sounds/shot.wav').play()
+        play_sound('shot.wav')
         new_bullet = Bullet(settings, screen, ship)
         bullets.add(new_bullet)
 
@@ -69,7 +69,7 @@ def update_bullets(bullets, aliens, stats, settings, scoreboard):
     # Check for any bullets that have hit aliens.
     # If so, get rid of the bullet and the alien.
     if pygame.sprite.groupcollide(bullets, aliens, True, True):
-        Sound('sounds/boom.wav').play()
+        play_sound('boom.wav')
         stats.score += settings.alien_points
         stats.shoot_alient_number += 1
         scoreboard.prep_ships(settings)
@@ -122,7 +122,7 @@ def update_aliens(settings, aliens, ship, bullets, stats, scoreboard):
 
 def ship_hit(settings, aliens, ship, bullets, stats, scoreboard):
     """Respond to ship being hit by alien."""
-    Sound('sounds/crash.wav').play()
+    play_sound('crash.wav')
     if stats.ships_left > 1:
         stats.ships_left -= 1
         bullets.empty()
@@ -150,7 +150,7 @@ def check_aliens_bottom(settings, aliens, ship, bullets, stats, scoreboard):
 def check_play_button(settings, stats, play_button, mouse_x, mouse_y, scoreboard):
     """Start a new game when the player clicks Play."""
     if play_button.rect.collidepoint(mouse_x, mouse_y):
-        Sound('sounds/fight.wav').play()
+        play_sound('fight.wav')
         pygame.mouse.set_visible(False)
         stats.game_active = True
         stats.reset_stats()
@@ -167,3 +167,12 @@ def record_highest_score(stats):
             record_file.write(str(stats.score))
         except ValueError:
             pass
+
+
+def play_sound(sound_name):
+    sound = 'sounds/{}'.format(sound_name)
+    try:
+        Sound(sound).play()
+    except FileNotFoundError:
+        pass
+
