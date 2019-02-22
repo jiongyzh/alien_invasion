@@ -14,7 +14,7 @@ def fire_bullet(settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 
-def check_keydown_event(event, settings, screen, ship, bullets):
+def check_keydown_event(event, settings, screen, ship, bullets, stats):
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
@@ -26,6 +26,8 @@ def check_keydown_event(event, settings, screen, ship, bullets):
     elif event.key == pygame.K_SPACE:
         fire_bullet(settings, screen, ship, bullets)
     elif event.key == pygame.K_ESCAPE:
+        if stats.score > stats.pre_high_score:
+            record_highest_score(stats)
         sys.exit()
 
 
@@ -46,7 +48,7 @@ def check_events(settings, screen, ship, bullets, play_button, stats, scoreboard
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_event(event, settings, screen, ship, bullets)
+            check_keydown_event(event, settings, screen, ship, bullets, stats)
         elif event.type == pygame.KEYUP:
             check_keyup_event(event, settings, screen, ship, bullets)
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -124,6 +126,9 @@ def ship_hit(settings, aliens, ship, bullets, stats, scoreboard):
         ship.center_ship()
         scoreboard.prep_ships(settings)
     else:
+        if stats.score > stats.pre_high_score:
+            record_highest_score(stats)
+
         stats.game_active = False
         aliens.empty()
         bullets.empty()
@@ -152,3 +157,9 @@ def check_play_button(settings, stats, play_button, mouse_x, mouse_y, scoreboard
         scoreboard.prep_ships(settings)
 
 
+def record_highest_score(stats):
+    with open('record.txt', 'w') as record_file:
+        try:
+            record_file.write(str(stats.score))
+        except ValueError:
+            pass
