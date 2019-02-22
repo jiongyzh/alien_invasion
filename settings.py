@@ -5,7 +5,7 @@ class Settings():
         self.screen_width = 1000
         self.screen_height = 750
         self.bg_color = (230, 230, 230)
-        self.counter = 0
+        self.level_counter = 20
         # Ship settings
         self.ship_limit = 3
 
@@ -27,6 +27,8 @@ class Settings():
         self.alien_speed_factor_x = 2
         self.alien_speed_factor_y = 0.6
         self.alien_create_rate = 0.98
+        self.alien_points = 1
+        self.counter = 0
 
     def increase_speed(self):
         """Increase speed settings."""
@@ -35,4 +37,4 @@ class Settings():
         self.alien_speed_factor_x *= self.speedup_scale
         self.alien_speed_factor_y *= self.speedup_scale
         self.alien_create_rate -= 0.001
-
+        self.alien_points *= self.speedup_scale

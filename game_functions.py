@@ -2,7 +2,6 @@ import sys
 import pygame
 from random import random
 from random import randint
-from time import sleep
 
 from bullet import Bullet
 from alien import Alien
@@ -41,7 +40,7 @@ def check_keyup_event(event, settings, screen, ship, bullets):
         ship.moving_down = False
 
 
-def check_events(settings, screen, ship, bullets, play_button, stats):
+def check_events(settings, screen, ship, bullets, play_button, stats, scoreboard):
     """Respond to keypresses and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -52,10 +51,10 @@ def check_events(settings, screen, ship, bullets, play_button, stats):
             check_keyup_event(event, settings, screen, ship, bullets)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(settings, stats, play_button, mouse_x, mouse_y)
+            check_play_button(settings, stats, play_button, mouse_x, mouse_y, scoreboard)
 
 
-def update_bullets(bullets, aliens):
+def update_bullets(bullets, aliens, stats, settings, scoreboard):
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom < 12:
@@ -65,15 +64,24 @@ def update_bullets(bullets, aliens):
 
     # Check for any bullets that have hit aliens.
     # If so, get rid of the bullet and the alien.
-    pygame.sprite.groupcollide(bullets, aliens, True, True)
+    if pygame.sprite.groupcollide(bullets, aliens, True, True):
+        stats.score += settings.alien_points
+        scoreboard.prep_score()
+
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        scoreboard.prep_high_score()
 
 
-def update_screen(screen, alien, aliens, ship):
+
+def update_screen(screen, alien, aliens, ship, scoreboard, settings):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
     alien.blit_me()
     ship.blit_me()
     aliens.draw(screen)
+    scoreboard.prep_level(settings)
+    scoreboard.show_score()
 
     # Make the most recently drawn screen visible.
     pygame.display.flip()
@@ -85,8 +93,6 @@ def create_fleet(settings, screen, aliens):
     alien_width = alien.rect.width
     alien_height = alien.rect.height
     aa = random()
-    print('bbbb: ', aa)
-    print(settings.alien_create_rate)
     if aa > settings.alien_create_rate:
         slot_number_x = settings.screen_width // alien_width
         slot_number_y = settings.screen_height / 2 // alien_height
@@ -129,13 +135,14 @@ def check_aliens_bottom(settings, aliens, ship, bullets, stats):
             aliens.remove(alien)
 
 
-def check_play_button(settings, stats, play_button, mouse_x, mouse_y):
+def check_play_button(settings, stats, play_button, mouse_x, mouse_y, scoreboard):
     """Start a new game when the player clicks Play."""
     if play_button.rect.collidepoint(mouse_x, mouse_y):
         pygame.mouse.set_visible(False)
         stats.game_active = True
-        stats.ships_left = stats.settings.ship_limit
-        settings.counter = 0
+        stats.reset_stats()
         settings.initialize_dynamic_settings()
+        scoreboard.prep_high_score()
+        scoreboard.prep_score()
 
 
