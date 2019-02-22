@@ -66,6 +66,8 @@ def update_bullets(bullets, aliens, stats, settings, scoreboard):
     # If so, get rid of the bullet and the alien.
     if pygame.sprite.groupcollide(bullets, aliens, True, True):
         stats.score += settings.alien_points
+        stats.shoot_alient_number += 1
+        scoreboard.prep_ships(settings)
         scoreboard.prep_score()
 
     if stats.score > stats.high_score:
@@ -81,6 +83,7 @@ def update_screen(screen, alien, aliens, ship, scoreboard, settings):
     ship.blit_me()
     aliens.draw(screen)
     scoreboard.prep_level(settings)
+    scoreboard.prep_ships(settings)
     scoreboard.show_score()
 
     # Make the most recently drawn screen visible.
@@ -104,21 +107,22 @@ def create_fleet(settings, screen, aliens):
         settings.counter += 1
 
 
-def update_aliens(settings, aliens, ship, bullets, stats):
+def update_aliens(settings, aliens, ship, bullets, stats, scoreboard):
     """Update the postions of all aliens in the fleet."""
     aliens.update()
     if pygame.sprite.spritecollideany(ship, aliens):
-        ship_hit(settings, aliens, ship, bullets, stats)
+        ship_hit(settings, aliens, ship, bullets, stats, scoreboard)
 
-    check_aliens_bottom(settings, aliens, ship, bullets, stats)
+    check_aliens_bottom(settings, aliens, ship, bullets, stats, scoreboard)
 
 
-def ship_hit(settings, aliens, ship, bullets, stats):
+def ship_hit(settings, aliens, ship, bullets, stats, scoreboard):
     """Respond to ship being hit by alien."""
     if stats.ships_left > 1:
         stats.ships_left -= 1
         bullets.empty()
         ship.center_ship()
+        scoreboard.prep_ships(settings)
     else:
         stats.game_active = False
         aliens.empty()
@@ -128,10 +132,10 @@ def ship_hit(settings, aliens, ship, bullets, stats):
         settings.counter = 1
 
 
-def check_aliens_bottom(settings, aliens, ship, bullets, stats):
+def check_aliens_bottom(settings, aliens, ship, bullets, stats, scoreboard):
     for alien in aliens.sprites():
         if alien.rect.bottom > alien.screen.get_rect().bottom:
-            ship_hit(settings, aliens, ship, bullets, stats)
+            ship_hit(settings, aliens, ship, bullets, stats, scoreboard)
             aliens.remove(alien)
 
 
@@ -144,5 +148,7 @@ def check_play_button(settings, stats, play_button, mouse_x, mouse_y, scoreboard
         settings.initialize_dynamic_settings()
         scoreboard.prep_high_score()
         scoreboard.prep_score()
+        scoreboard.prep_level(settings)
+        scoreboard.prep_ships(settings)
 
 

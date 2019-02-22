@@ -12,3 +12,5 @@ class GameStats():
         self.ships_left = self.settings.ship_limit
         self.score = 0
         self.level = 1
+        self.add_ship_number = 0
+        self.shoot_alient_number = 0

@@ -36,7 +36,7 @@ def run_game():
             gf.create_fleet(ai_settings, screen, aliens)
             ship.update()
             gf.update_bullets(bullets, aliens, stats, ai_settings, scoreboard)
-            gf.update_aliens(ai_settings, aliens, ship, bullets, stats)
+            gf.update_aliens(ai_settings, aliens, ship, bullets, stats, scoreboard)
             gf.update_screen(screen, alien, aliens, ship, scoreboard, ai_settings)
         else:
             play_button.draw_button()

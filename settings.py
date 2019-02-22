@@ -6,6 +6,8 @@ class Settings():
         self.screen_height = 750
         self.bg_color = (230, 230, 230)
         self.level_counter = 20
+        self.alien_numbers_for_one_ship = 50
+        self.max_ship_number = 6
         # Ship settings
         self.ship_limit = 3
 
