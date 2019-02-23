@@ -107,6 +107,8 @@ def create_fleet(settings, screen, aliens):
         alien.y = alien_height * randint(0, slot_number_y)
         alien.rect.x = alien.x
         alien.rect.y = alien.y
+        if alien.rect.right > screen.get_rect().right:
+            alien.straight_flag = False
         aliens.add(alien)
         settings.counter += 1
 

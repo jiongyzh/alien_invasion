@@ -21,13 +21,13 @@ class Alien(Sprite):
         self.y = float(self.rect.y)
         self.direction_flag = True
         self.change_direction_flag = True
-        if random() > 0.2:
-            self.straight_flag = False
-        else:
+        if random() > 0.8:
             self.straight_flag = True
+        else:
+            self.straight_flag = False
         if random() > 0.95:
             self.alien_speed_factor_x = self.settings.alien_speed_factor_x * 3
-            self.alien_speed_factor_y = self.settings.alien_speed_factor_y * 1.2
+            self.alien_speed_factor_y = self.settings.alien_speed_factor_y * 1.5
         elif random() > 0.9:
             self.alien_speed_factor_x = self.settings.alien_speed_factor_x * 2
             self.alien_speed_factor_y = self.settings.alien_speed_factor_y * 1.2
