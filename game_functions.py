@@ -26,7 +26,8 @@ def check_keydown_event(event, settings, screen, ship, bullets, stats):
     elif event.key == pygame.K_DOWN:
         ship.moving_down = True
     elif event.key == pygame.K_SPACE:
-        fire_bullet(settings, screen, ship, bullets)
+        if stats.game_active:
+            fire_bullet(settings, screen, ship, bullets)
     elif event.key == pygame.K_ESCAPE:
         if stats.score > stats.pre_high_score:
             record_highest_score(stats)
